@@ -51,3 +51,27 @@ on e.event_type = b.event) c
 where c.occurences>c.average
 group by c.business_id
 having count(*) > 1
+
+ 
+-- Solution2: 
+WITH AvgOccurrences AS (
+    SELECT 
+        event_type, 
+        AVG(occurences) AS avg_occurences
+    FROM Events
+    GROUP BY event_type
+),
+BusinessEventComparison AS (
+    SELECT 
+        e.business_id,
+        e.event_type
+    FROM Events e
+    JOIN AvgOccurrences a
+    ON e.event_type = a.event_type
+    WHERE e.occurences > a.avg_occurences
+)
+SELECT 
+    business_id
+FROM BusinessEventComparison
+GROUP BY business_id
+HAVING COUNT(event_type) > 1;
