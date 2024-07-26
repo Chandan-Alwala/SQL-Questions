@@ -63,6 +63,41 @@
 -- User Winston with id = 1 logged in 2 times only in 2 different days, so, Winston is not an active user.
 -- User Jonathan with id = 7 logged in 7 times in 6 different days, five of them were consecutive days, so, Jonathan is an active user.
 
+-- Solution2
+WITH LoginStreaks AS (
+    SELECT 
+        id,
+        login_date,
+        login_date - INTERVAL '1 DAY' * ROW_NUMBER() OVER (PARTITION BY id ORDER BY login_date) AS grp
+    FROM 
+        Logins
+    GROUP BY 
+        id, login_date
+),
+ConsecutiveLogins AS (
+    SELECT 
+        id,
+        COUNT(*) AS consecutive_days
+    FROM 
+        LoginStreaks
+    GROUP BY 
+        id, grp
+    HAVING 
+        COUNT(*) >= 5
+)
+SELECT 
+    a.id,
+    a.name
+FROM 
+    ConsecutiveLogins cl
+JOIN 
+    Accounts a
+ON 
+    cl.id = a.id
+ORDER BY 
+    a.id;
+
+
 -- Solution
 with t1 as (
 select id,login_date,
