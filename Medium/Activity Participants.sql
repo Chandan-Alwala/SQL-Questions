@@ -61,6 +61,23 @@
 -- Horse Riding activity is performed by 1 friend, minimum number of participants, (Bob B.)
 -- Singing is performed by 2 friends (Victor J. and Jade W.)
 
+-- Solution2 
+WITH cte AS (
+    SELECT COUNT(id) AS activity_count, activity 
+    FROM Friends 
+    GROUP BY activity
+), 
+max_min_counts AS (
+    SELECT 
+        MAX(activity_count) AS max_count, 
+        MIN(activity_count) AS min_count 
+    FROM cte
+)
+SELECT activity 
+FROM cte 
+WHERE activity_count NOT IN (SELECT max_count FROM max_min_counts UNION ALL SELECT min_count FROM max_min_counts);
+
+
 -- Solution
 with t1 as(
 select max(a.total) as total
