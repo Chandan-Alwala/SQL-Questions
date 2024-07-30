@@ -65,6 +65,14 @@ FROM cte1 c1
 JOIN cte2 c2 ON c1.sale_date = c2.sale_date
 ORDER BY c1.sale_date;
 
+-- Solution 3
+SELECT s1.sale_date, s1.sold_num - s2.sold_num AS diff
+FROM Sales s1
+JOIN Sales s2
+ON s1.sale_date = s2.sale_date
+WHERE s1.fruit = 'apples' AND s2.fruit = 'oranges'
+ORDER BY s1.sale_date;
+
 
 -- Solution
 Select sale_date, sold_num-sold as diff
