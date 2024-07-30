@@ -49,6 +49,23 @@
 -- Day 2020-05-03, 20 apples and 0 oranges were sold (Difference 20 - 0 = 20).
 -- Day 2020-05-04, 15 apples and 16 oranges were sold (Difference 15 - 16 = -1).
 
+-- Solution2
+WITH cte1 AS (
+    SELECT sale_date, sold_num AS apples_sold
+    FROM Sales
+    WHERE fruit = 'apples'
+),
+cte2 AS (
+    SELECT sale_date, sold_num AS oranges_sold
+    FROM Sales
+    WHERE fruit = 'oranges'
+)
+SELECT c1.sale_date, c1.apples_sold - c2.oranges_sold AS diff
+FROM cte1 c1
+JOIN cte2 c2 ON c1.sale_date = c2.sale_date
+ORDER BY c1.sale_date;
+
+
 -- Solution
 Select sale_date, sold_num-sold as diff
 from 
