@@ -52,6 +52,35 @@
 -- The employee with employee_id 7 report his work indirectly to the head of the company 7 --> 4 --> 2 --> 1.
 -- The employees with employee_id 3, 8 and 9 don't report their work to head of company directly or indirectly.
 
+-- Solution2
+select distinct e1.employee_id 
+from employees e1 
+inner join employees e2 on e1.manager_id = e2.id 
+inner join employees e3 on e2.manager_id = e3.id
+inner join employees e4 on e3.manager_id = e4.id
+where 1 in (e1.manager_id, e2.manager_id, e3.manager_id, e4.manager_id)
+
+-- Solution 3
+WITH RECURSIVE ReportTree AS (
+    -- Base case: start with the head of the company
+    SELECT 
+        employee_id,
+        manager_id
+    FROM Employees
+    WHERE employee_id = 1
+    UNION ALL
+    -- Recursive case: find employees who report to the current set of employees
+    SELECT 
+        e.employee_id,
+        e.manager_id
+    FROM Employees e
+    INNER JOIN ReportTree rt ON e.manager_id = rt.employee_id
+)
+SELECT DISTINCT employee_id
+FROM ReportTree
+WHERE employee_id != 1;
+
+
 -- Solution
 select employee_id
 from employees
