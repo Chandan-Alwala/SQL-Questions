@@ -20,6 +20,17 @@
 -- | 1               |
 -- +-----------------+
 
+-- Solution2
+with cte as (
+select Num,
+  lag(Num,1) over(order by ID) as next_num, 
+  lag(Num,2) over(order by ID) as prev_num, 
+  from Logs  
+  ) 
+select distinct(Num) as ConsecutiveNums from cte where 
+  Num = next_num and Num = prev_num 
+  
+
 -- Solution
 select distinct a.num as ConsecutiveNums
 from(
