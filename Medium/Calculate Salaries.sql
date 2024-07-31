@@ -61,6 +61,19 @@
 -- The salary after taxes = salary - (taxes percentage / 100) * salary
 -- For example, Salary for Morninngcat (3, 15) after taxes = 7777 - 7777 * (24 / 100) = 7777 - 1866.48 = 5910.52, which is rounded to 5911.
 
+-- Solution2
+with cte as (
+ select company_id, employee_id, employee_name, salary, 
+ max(salary) over(partition by company_id) as max_company_salary
+ from salaries
+)
+
+select company_id, employee_id, employee_name, 
+ case when cte.max_company_salary < 1000 then cte.salary
+ when cte.max_company_salary between 1000 and 10000 then round(cte.salary*(0.76),0)
+ else round(cte.salary*(0.51),0) as updated_salary
+ from cte
+
 -- Solution
 with t1 as (
 select company_id, employee_id, employee_name, salary as sa, max(salary) over(partition by company_id) as maximum
