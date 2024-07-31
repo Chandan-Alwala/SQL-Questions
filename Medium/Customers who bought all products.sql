@@ -50,6 +50,21 @@
 -- +-------------+
 -- The customers who bought all the products (5 and 6) are customers with id 1 and 3.
 
+-- Solution3 
+SELECT customer_id
+FROM Customer
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(*) FROM Product);
+
+-- Solution2 
+with cte as (
+ select customer_id, count(distinct product_key) as product_count
+ from Customer 
+ group by customer_id
+)
+select customer_id from cte where 
+ product_count = (select count(distinct product_key) from Product)
+
 -- Solution
 select customer_id
 from customer
