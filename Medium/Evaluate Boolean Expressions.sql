@@ -65,6 +65,21 @@
 -- +--------------+----------+---------------+-------+
 -- As shown, you need find the value of each boolean exprssion in the table using the variables table.
 
+-- Solution2 
+with cte as (
+ select v1.value as left_value, e.left_operand, e.operator, v2.value as right_value, e.right_operand
+ from expressions e 
+ join variables v1 on e.left_operand = v1.name
+ join variables v2 on e.right_operand = v2.name 
+)
+
+select left_operand, operator, right_operand,
+ case when operator = '>' then (left_value > right_value)
+ when operator = '<' then (left_value < right_value)
+ when operator = '=' then (left_value = right_value)
+ else False end as value
+ from cte 
+ 
 -- Solution
 with t1 as(
 select e.left_operand, e.operator, e.right_operand, v.value as left_val, v_1.value as right_val
