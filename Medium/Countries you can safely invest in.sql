@@ -94,6 +94,25 @@
 -- Global call duration average = (2 * (33 + 3 + 59 + 102 + 330 + 5 + 13 + 3 + 1 + 7)) / 20 = 55.70000
 -- Since Peru is the only country where average call duration is greater than the global average, it's the only recommended country.
 
+-- Solution2 
+WITH GlobalAverage AS (
+    SELECT AVG(duration) AS global_avg
+    FROM Calls
+),
+CountryAverage AS (
+    SELECT c.name AS country, AVG(ca.duration) AS avg_duration
+    FROM Calls ca
+    JOIN Person p1 ON ca.caller_id = p1.id
+    JOIN Person p2 ON ca.callee_id = p2.id
+    JOIN Country c ON LEFT(p1.phone_number, 3) = c.country_code
+    GROUP BY c.name
+)
+SELECT country
+FROM CountryAverage
+WHERE avg_duration > (SELECT global_avg FROM GlobalAverage);
+
+
+
 -- Solution
 with t1 as(
 select caller_id as id, duration as total
