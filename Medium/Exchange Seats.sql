@@ -32,6 +32,17 @@
 -- |    5    | Jeames  |
 -- +---------+---------+
 
+-- Solution2 
+select 
+case when id < (select max(id) from seat) and id%2=1 then id+1
+ when id%2=0 then id - 1
+ else id
+ end as id,
+ student 
+from seat 
+order by id 
+
+
 -- Solution
 select row_number() over (order by (if(id%2=1,id+1,id-1))) as id, student
 from seat
