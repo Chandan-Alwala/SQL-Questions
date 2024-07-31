@@ -52,6 +52,22 @@
 -- Corona Masks stock was bought at day 1 for 10$ and was sold at day 3 for 1010$. It was bought again at day 4 for 1000$ and was sold at day 5 for 500$. At last, it was bought at day 6 for 1000$ and was sold at day 10 for 10000$. Capital gain/loss is the sum of capital gains/losses for each ('Buy' --> 'Sell') 
 -- operation = (1010 - 10) + (500 - 1000) + (10000 - 1000) = 1000 - 500 + 9000 = 9500$.
 
+-- Solution2
+WITH paired_operations AS (
+    SELECT stock_name, 
+           SUM(CASE WHEN operation = 'Sell' THEN price 
+                    WHEN operation = 'Buy' THEN -price 
+               END) AS gain_loss
+    FROM Stocks
+    GROUP BY stock_name, operation_day
+)
+ 
+SELECT stock_name, 
+       SUM(gain_loss) AS capital_gain_loss
+FROM paired_operations
+GROUP BY stock_name;
+
+
 -- Solution
 select stock_name, (one-two) as capital_gain_loss
 from(
