@@ -65,6 +65,17 @@
 -- +-------------+---------------+
 -- Only the customer_id with id 3 bought the product A and B but not the product C.
 
+-- Solution2 
+select c.customer_id, c.customer_name from 
+ Customers c join Orders o on 
+ c.customer_id = o.customer_id 
+ group by (c.customer_id, c.customer_name) 
+ having 
+  SUM(CASE WHEN o.product_name = 'A' then 1 else 0 end) > 0 AND 
+  SUM(CASE WHEN o.product_name = 'B' THEN 1 ELSE 0 END) > 0 AND
+  SUM(CASE WHEN o.product_name = 'C' THEN 1 ELSE 0 END) = 0
+ order by c.customer_id
+
 -- Solution
 with t1 as
 (
