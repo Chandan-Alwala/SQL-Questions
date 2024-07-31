@@ -32,6 +32,16 @@
 
 -- Max and Jim both have the highest salary in the IT department and Henry has the highest salary in the Sales department.
 
+-- Solution2 
+with cte as (
+  select d.name as Department, e.name as Employee, e.salary as Salary, 
+  rank() over(partition by e.DepartmentId order by e.salary desc) as salary_rank
+  from employee e join Department d on e.DepartmentId = d.Id 
+)
+  select Department, Employee, Salary from cte where 
+  salary_rank = 1
+
+
 -- Solution
 select a.Department, a.Employee, a.Salary
 from(
