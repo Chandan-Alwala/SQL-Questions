@@ -43,6 +43,13 @@
 -- For the player with id 3, 0 + 5 = 5 games played by 2018-07-03.
 -- Note that for each player we only care about the days when the player logged in.
 
+-- Solution2
+select player_id, event_date, 
+ sum(games_played) over(partition by player_id order by event_date) as games_played_so_far
+ from activity
+ order by player_id, event_date
+ 
+
 -- Solution
 select player_id, event_date, 
 sum(games_played) over(partition by player_id order by event_date) as games_played_so_far
