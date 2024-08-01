@@ -42,6 +42,16 @@
 -- The most recent activity of Alice is Travel from 2020-02-24 to 2020-02-28, before that she was dancing from 2020-02-21 to 2020-02-23.
 -- Bob only has one record, we just take that one.
 
+-- Solution2 
+with cte as (
+  select *, rank() over(partition by username order by startDate desc) as activity_rank, 
+  count(username) over(partition by username) as activity_count 
+  from UserActivity 
+)
+select username, activity, startdate, enddate
+  from cte where 
+  activity_rank = 2 or activity_count = 1 
+
 -- Solution
 select username, activity, startdate, enddate
 from
