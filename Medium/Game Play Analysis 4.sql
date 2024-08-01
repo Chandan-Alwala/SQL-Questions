@@ -41,6 +41,21 @@
 -- +-----------+
 -- Only the player with id 1 logged back in after the first day he had logged in so the answer is 1/3 = 0.33
 
+-- Solution2
+with first_login_cte as (
+    select player_id, min(event_date) as first_login_date 
+    from Activity 
+    group by player_id 
+)
+
+select round((count(distinct a.player_id)/(select count(distinct player_id) from Activity)),2) as fraction 
+from Activity a join first_login_cte f 
+on a.event_date = f.first_login_date + INTERVAL 1 DAY
+ -- where a.event_date = DATE_ADD(f.first_login_date, INTERVAL 1 DAY)
+    and a.player_id = f.player_id
+
+
+
 -- Solution
 With t as 
 (select player_id,
