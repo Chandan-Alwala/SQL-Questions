@@ -21,6 +21,17 @@
 -- Note:
 -- No one would report to himself.
 
+-- Solution2 
+with cte as (
+    select e2.id, e2.name as name, count(e1.id) as reportee_count
+    from Employee e1 join Employee e2 on
+    e1.managerId=e2.id 
+    group by e2.id, e2.name
+)
+select name from cte where 
+reportee_count >= 5
+
+
 -- Solution
 with t1 as
 (
