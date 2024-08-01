@@ -28,6 +28,21 @@
 -- +------+------+
 -- The person with id '3' is a friend of people '1', '2' and '4', so he has 3 friends in total, which is the most number than any others.
 
+-- Solution2
+with cte as (
+ select requester_id as id from request_accepted
+ union all 
+ select accepter_id as id from request_accepted
+)
+
+select id, count(*) as num
+ from cte 
+ group by id 
+ order by num desc 
+ limit 1 
+
+
+
 -- Solution
 select requester_id as id, b.total as num
 from(
