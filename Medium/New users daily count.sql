@@ -61,3 +61,4 @@ select login_date, count(distinct user_id) as user_count
 from t1
 where login_date between '2019-04-01' and '2019-06-30'
 group by login_date
+HAVING COUNT(DISTINCT user_id) > 0
