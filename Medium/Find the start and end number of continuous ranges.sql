@@ -42,6 +42,16 @@
 -- Number 9 is missing in the table.
 -- Number 10 is contained in the table.
 
+-- Solution2 
+with cte as (
+select log_id-row_number() over(order by log_id) as diff, 
+  log_id from logs
+)
+select min(log_id) as start_id, max(log_id) as end_id 
+  from cte group by diff 
+
+
+
 -- Solution
 select min(log_id) as start_id, max(log_id) as end_id
 from(
