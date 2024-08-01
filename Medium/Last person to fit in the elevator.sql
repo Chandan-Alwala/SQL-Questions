@@ -42,6 +42,19 @@
 -- Queue table is ordered by turn in the example for simplicity.
 -- In the example George Washington(id 5), John Adams(id 3) and Thomas Jefferson(id 6) will enter the elevator as their weight sum is 250 + 350 + 400 = 1000.
 -- Thomas Jefferson(id 6) is the last person to fit in the elevator because he has the last turn in these three people.
+
+-- Solution2
+with cte as (
+ select *, sum(weight) over(order by turn) as cum_sum
+ from Queue
+)
+select person_name from cte 
+ where cum_sum <= 1000 
+ order by cum_sum desc 
+ limit 1 
+
+
+
 -- Solution
 With t1 as
 (
