@@ -81,6 +81,18 @@
 -- | 4         | 2018-05-21 | 0              |
 -- +-----------+------------+----------------+
 
+-- Solution2 
+with cte as (
+ select buyer_id, count(order_date) as orders_in_2019
+ from orders where year(order_date) = 2019
+ group by buyer_id
+)
+select buyer_id, u.join_date, c.orders_in_2019
+ from cte c join users u on 
+ c.buyer_id = u.user_id
+ 
+
+
 -- Solution
 select user_id as buyer_id, join_date, coalesce(a.orders_in_2019,0)
 from users
