@@ -29,6 +29,31 @@
 
 -- Note: The highest answer rate meaning is: answer number's ratio in show number in the same question.
 
+-- Solution2 
+WITH AnswerRates AS (
+    SELECT
+        question_id,
+        COUNT(CASE WHEN action = 'answer' THEN 1 END) * 1.0 / COUNT(CASE WHEN action = 'show' THEN 1 END) AS answer_rate
+    FROM
+        survey_log
+    GROUP BY
+        question_id
+),
+MaxRate AS (
+    SELECT 
+        MAX(answer_rate) AS max_rate
+    FROM 
+        AnswerRates
+)
+SELECT 
+    question_id
+FROM 
+    AnswerRates
+WHERE 
+    answer_rate = (SELECT max_rate FROM MaxRate);
+
+
+
 -- Solution
 with t1 as(
 select a.question_id, coalesce(b.answer/a.show_1,0) as rate
