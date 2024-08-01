@@ -61,6 +61,41 @@
 -- | 2019-09  | US      | 0              | 0               | 1                 | 5000               |
 -- +----------+---------+----------------+-----------------+-------------------+--------------------+
 
+-- Solution2 
+WITH TransactionStats AS (
+    SELECT 
+        DATE_FORMAT(trans_date, '%Y-%m') AS month,
+        country,
+        COUNT(*) AS approved_count,
+        SUM(amount) AS approved_amount
+    FROM Transactions
+    WHERE state = 'approved'
+    GROUP BY DATE_FORMAT(trans_date, '%Y-%m'), country
+),
+ChargebackStats AS (
+    SELECT 
+        DATE_FORMAT(t.trans_date, '%Y-%m') AS month,
+        t.country,
+        COUNT(*) AS chargeback_count,
+        SUM(t.amount) AS chargeback_amount
+    FROM Chargebacks c
+    JOIN Transactions t ON c.trans_id = t.id
+    GROUP BY DATE_FORMAT(t.trans_date, '%Y-%m'), t.country
+)
+SELECT
+    COALESCE(t.month, c.month) AS month,
+    COALESCE(t.country, c.country) AS country,
+    COALESCE(t.approved_count, 0) AS approved_count,
+    COALESCE(t.approved_amount, 0) AS approved_amount,
+    COALESCE(c.chargeback_count, 0) AS chargeback_count,
+    COALESCE(c.chargeback_amount, 0) AS chargeback_amount
+FROM TransactionStats t
+FULL OUTER JOIN ChargebackStats c
+ON t.month = c.month AND t.country = c.country
+ORDER BY month, country;
+
+
+
 -- Solution
 with t1 as
 (select country, extract('month' from trans_date), state, count(*) as approved_count, sum(amount) as approved_amount
