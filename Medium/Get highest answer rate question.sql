@@ -33,7 +33,7 @@
 WITH AnswerRates AS (
     SELECT
         question_id,
-        COUNT(CASE WHEN action = 'answer' THEN 1 END) * 1.0 / COUNT(CASE WHEN action = 'show' THEN 1 END) AS answer_rate
+        COUNT(CASE WHEN action = 'answer' THEN 1 END) * 1.0 / COALESCE(COUNT(CASE WHEN action = 'show' THEN 1 END), 1) AS answer_rate
     FROM
         survey_log
     GROUP BY
@@ -51,6 +51,7 @@ FROM
     AnswerRates
 WHERE 
     answer_rate = (SELECT max_rate FROM MaxRate);
+
 
 
 
