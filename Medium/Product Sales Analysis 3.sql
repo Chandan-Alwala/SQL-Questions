@@ -54,6 +54,13 @@
 -- | 200        | 2011       | 15       | 9000  |
 -- +------------+------------+----------+-------+
 
+-- Solution2
+select product_id, year as first_year, quantity, price 
+from sales 
+where (product_id, year) in 
+(select product_id, min(year) as year from sales 
+group by product_id)
+
 -- Solution
 select a.product_id, a.year as first_year, a.quantity, a.price
 from
