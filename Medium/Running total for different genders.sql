@@ -61,6 +61,18 @@
 -- Fourth day is 2019-12-31, Joe scored 3 points and the total score for the team is 29.
 -- Fifth day is 2020-01-07, Bajrang scored 7 points and the total score for the team is 36.
 
+-- Solution2
+SELECT 
+    gender, 
+    day, 
+    SUM(score_points) OVER (PARTITION BY gender ORDER BY day) AS total
+FROM 
+    Scores
+ORDER BY 
+    gender, 
+    day;
+
+
 -- Solution
 select gender, day, 
 sum(score_points) over(partition by gender order by day) as total
