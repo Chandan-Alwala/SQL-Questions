@@ -58,6 +58,15 @@
 -- Both employees with id 1 and 3 have the 
 -- most experience among the employees of the first project. For the second project, the employee with id 1 has the most experience.
 
+-- Solution2: 
+with cte as (
+select p.project_id, p.employee_id, e.experience_years,
+ rank() over(partition by project_id order by experience_years desc) as exp_rank
+ from Project p join employee e on p.employee_id = e.employee_id  
+ )
+select project_id, employee_id from cte 
+ where exp_rank = 1
+ 
 -- Solution
 with t1 as(
 select p.project_id, p.employee_id, e.experience_years,
