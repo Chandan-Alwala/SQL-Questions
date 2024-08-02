@@ -50,6 +50,15 @@
 
 -- If there is only one node on the tree, you only need to output its root attributes.
 
+-- Solution2
+select id, 
+case when p_id is null then "Root"
+     when id in (select p_id from Tree) then 'Inner'
+     else 'Leaf'
+     end 
+     as type
+from Tree
+
 -- Solution
 select id,
 case when p_id is null then 'Root'
