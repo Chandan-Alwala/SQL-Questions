@@ -28,6 +28,14 @@
 -- Followee would not follow himself/herself in all cases.
 -- Please display the result in follower's alphabet order.
 
+--Solution2
+SELECT f1.follower AS follower, COUNT(f2.follower) AS num
+FROM follow f1
+JOIN follow f2 ON f1.follower = f2.followee
+GROUP BY f1.follower
+ORDER BY f1.follower;
+
+
 -- Solution
 select followee as follower, count(distinct(follower)) as num
 from follow
