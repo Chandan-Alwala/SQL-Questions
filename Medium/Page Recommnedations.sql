@@ -72,6 +72,33 @@
 -- Page 77 is suggested from both user 2 and user 3.
 -- Page 88 is not suggested because user 1 already likes it.
 
+-- Solution2
+WITH Friends AS (
+    SELECT user2_id AS friend_id
+    FROM Friendship
+    WHERE user1_id = 1
+    UNION
+    SELECT user1_id AS friend_id
+    FROM Friendship
+    WHERE user2_id = 1
+),
+FriendLikes AS (
+    SELECT DISTINCT L.page_id
+    FROM Friends F
+    JOIN Likes L ON F.friend_id = L.user_id
+),
+UserLikes AS (
+    SELECT page_id
+    FROM Likes
+    WHERE user_id = 1
+)
+SELECT DISTINCT FL.page_id AS recommended_page
+FROM FriendLikes FL
+LEFT JOIN UserLikes UL ON FL.page_id = UL.page_id
+WHERE UL.page_id IS NULL;
+
+
+
 -- Solution
 select distinct page_id as recommended_page
 from likes
